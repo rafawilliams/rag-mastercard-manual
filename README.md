@@ -34,3 +34,4 @@ BEDROCK_MODEL_ARN=arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3
 S3_MANUALS_BUCKET=mastercard-manuals-<account-id>
 FRONTEND_ORIGIN=http://localhost:5173
 ```
+# rag-mastercard-manual
