@@ -1,0 +1,17 @@
+# Node
+node_modules/
+dist/
+.build/
+*.js.map
+
+# Env
+.env
+.env.local
+*.env
+
+# AWS SAM build artifacts (samconfig.toml IS committed — contains non-secret config)
+.aws-sam/
+
+# OS
+.DS_Store
+Thumbs.db
