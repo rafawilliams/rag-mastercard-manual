@@ -1,0 +1,71 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Mastercard Manuals Chatbot Backend
+
+Globals:
+  Function:
+    Timeout: 30
+    Runtime: nodejs20.x
+    Architectures:
+      - x86_64
+
+Parameters:
+  KnowledgeBaseId:
+    Type: String
+    Description: Bedrock Knowledge Base ID
+  ModelArn:
+    Type: String
+    Description: "Bedrock generator model ARN (ej. arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-5-sonnet-20241022-v2:0)"
+  FrontendOrigin:
+    Type: String
+    Description: "Origin del frontend para CORS (ej: https://main.abc123.amplifyapp.com)"
+    Default: "*"
+
+Resources:
+  ChatFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: false
+        Target: es2020
+        Sourcemap: true
+        EntryPoints:
+          - src/handlers/chat.ts
+        External:
+          - "@aws-sdk/client-bedrock-agent-runtime"
+    Properties:
+      CodeUri: ./
+      Handler: src/handlers/chat.handler
+      Environment:
+        Variables:
+          BEDROCK_KNOWLEDGE_BASE_ID: !Ref KnowledgeBaseId
+          BEDROCK_MODEL_ARN: !Ref ModelArn
+          FRONTEND_ORIGIN: !Ref FrontendOrigin
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - bedrock:RetrieveAndGenerate
+                - bedrock:Retrieve
+                - bedrock:InvokeModel
+              Resource: "*"
+      Events:
+        ChatPost:
+          Type: Api
+          Properties:
+            Path: /chat
+            Method: post
+        ChatOptions:
+          Type: Api
+          Properties:
+            Path: /chat
+            Method: options
+
+Outputs:
+  ApiUrl:
+    Description: API Gateway endpoint URL
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod"
+  ChatFunctionArn:
+    Description: Lambda function ARN
+    Value: !GetAtt ChatFunction.Arn

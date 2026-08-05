@@ -1,0 +1,16 @@
+{
+  "httpMethod": "POST",
+  "body": "{\"message\": \"¿Cuáles son las tarifas de Mastercard?\", \"sessionId\": \"local-test-001\"}",
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "path": "/chat",
+  "queryStringParameters": null,
+  "pathParameters": null,
+  "requestContext": {},
+  "resource": "",
+  "isBase64Encoded": false,
+  "multiValueHeaders": {},
+  "stageVariables": null,
+  "multiValueQueryStringParameters": null
+}
