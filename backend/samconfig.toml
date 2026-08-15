@@ -15,5 +15,5 @@ region = "us-east-1"
 parameter_overrides = [
   "KnowledgeBaseId=JOGDDMLYDZ",
   "ModelArn=arn:aws:bedrock:us-east-1::foundation-model/amazon.nova-lite-v1:0",
-  "FrontendOrigin=http://localhost:5173"
+  "FrontendOrigin=https://main.d3shz2eecr021w.amplifyapp.com"
 ]
