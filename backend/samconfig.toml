@@ -13,7 +13,7 @@ confirm_changeset = true
 resolve_s3 = true
 region = "us-east-1"
 parameter_overrides = [
-  "KnowledgeBaseId=TU_KB_ID_AQUI",
-  "ModelArn=arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-5-sonnet-20241022-v2:0",
-  "FrontendOrigin=*"
+  "KnowledgeBaseId=JOGDDMLYDZ",
+  "ModelArn=arn:aws:bedrock:us-east-1::foundation-model/amazon.nova-lite-v1:0",
+  "FrontendOrigin=http://localhost:5173"
 ]
