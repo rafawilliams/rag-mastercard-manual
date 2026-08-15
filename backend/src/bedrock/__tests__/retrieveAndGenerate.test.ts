@@ -68,3 +68,18 @@ test("returns empty answer when Bedrock output is undefined", async () => {
   expect(result.answer).toBe("");
   expect(result.citations).toEqual([]);
 });
+
+test("omits sessionId from the Bedrock command when none is provided", async () => {
+  bedrockMock.on(RetrieveAndGenerateCommand).resolves({
+    output: { text: "Respuesta" },
+    citations: [],
+    sessionId: "new-session-from-bedrock",
+    $metadata: {},
+  });
+
+  const result = await retrieveAndGenerate("primera pregunta");
+
+  const call = bedrockMock.commandCalls(RetrieveAndGenerateCommand)[0];
+  expect(call.args[0].input.sessionId).toBeUndefined();
+  expect(result.sessionId).toBe("new-session-from-bedrock");
+});

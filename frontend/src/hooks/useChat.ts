@@ -7,7 +7,9 @@ export function useChat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const sessionId = useRef<string>(uuidv4());
+  // Bedrock only accepts a sessionId it issued itself in a prior response,
+  // so this starts undefined (new session) and is filled in after the first reply.
+  const sessionId = useRef<string | undefined>(undefined);
 
   const send = useCallback(
     async (text: string) => {
@@ -29,6 +31,8 @@ export function useChat() {
           message: text.trim(),
           sessionId: sessionId.current,
         });
+
+        sessionId.current = response.sessionId;
 
         const assistantMsg: Message = {
           id: uuidv4(),

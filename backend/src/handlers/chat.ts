@@ -23,7 +23,7 @@ export const handler = async (
   if (!event.body) return respond(400, { error: "Request body is required" });
 
   let message: string;
-  let sessionId: string;
+  let sessionId: string | undefined;
 
   try {
     const parsed = JSON.parse(event.body);
@@ -35,8 +35,8 @@ export const handler = async (
 
   if (!message || typeof message !== "string")
     return respond(400, { error: "message is required" });
-  if (!sessionId || typeof sessionId !== "string")
-    return respond(400, { error: "sessionId is required" });
+  if (sessionId !== undefined && typeof sessionId !== "string")
+    return respond(400, { error: "sessionId must be a string" });
 
   try {
     const result = await retrieveAndGenerate(message, sessionId);

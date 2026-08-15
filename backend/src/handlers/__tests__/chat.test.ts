@@ -53,8 +53,23 @@ test("returns 400 when message is missing", async () => {
   expect(result.statusCode).toBe(400);
 });
 
-test("returns 400 when sessionId is missing", async () => {
+test("returns 200 when sessionId is missing (starts a new Bedrock session)", async () => {
+  mockRetrieve.mockResolvedValueOnce({
+    answer: "Respuesta",
+    citations: [],
+    sessionId: "bedrock-generated-id",
+  });
+
   const result = await handler(makeEvent({ message: "hola" }));
+
+  expect(result.statusCode).toBe(200);
+  expect(mockRetrieve).toHaveBeenCalledWith("hola", undefined);
+  const body = JSON.parse(result.body);
+  expect(body.sessionId).toBe("bedrock-generated-id");
+});
+
+test("returns 400 when sessionId is not a string", async () => {
+  const result = await handler(makeEvent({ message: "hola", sessionId: 123 }));
   expect(result.statusCode).toBe(400);
 });
 

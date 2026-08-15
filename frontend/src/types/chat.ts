@@ -13,10 +13,11 @@ export interface Message {
 
 export interface ChatRequest {
   message: string;
-  sessionId: string;
+  sessionId?: string;
 }
 
 export interface ChatResponse {
   answer: string;
   citations: Citation[];
+  sessionId?: string;
 }

@@ -68,4 +68,35 @@ describe("useChat", () => {
     expect(mockSend).not.toHaveBeenCalled();
     expect(result.current.messages).toHaveLength(0);
   });
+
+  it("starts without a sessionId, then reuses the one Bedrock returns", async () => {
+    mockSend.mockResolvedValueOnce({
+      answer: "Respuesta 1",
+      citations: [],
+      sessionId: "bedrock-session-1",
+    });
+    mockSend.mockResolvedValueOnce({
+      answer: "Respuesta 2",
+      citations: [],
+      sessionId: "bedrock-session-1",
+    });
+
+    const { result } = renderHook(() => useChat());
+
+    await act(async () => {
+      await result.current.send("primera pregunta");
+    });
+    expect(mockSend).toHaveBeenNthCalledWith(1, {
+      message: "primera pregunta",
+      sessionId: undefined,
+    });
+
+    await act(async () => {
+      await result.current.send("segunda pregunta");
+    });
+    expect(mockSend).toHaveBeenNthCalledWith(2, {
+      message: "segunda pregunta",
+      sessionId: "bedrock-session-1",
+    });
+  });
 });

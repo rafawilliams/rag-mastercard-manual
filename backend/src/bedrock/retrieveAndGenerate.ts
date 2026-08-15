@@ -16,11 +16,12 @@ export interface Citation {
 export interface ChatResponse {
   answer: string;
   citations: Citation[];
+  sessionId?: string;
 }
 
 export async function retrieveAndGenerate(
   message: string,
-  sessionId: string
+  sessionId?: string
 ): Promise<ChatResponse> {
   const command = new RetrieveAndGenerateCommand({
     input: { text: message },
@@ -31,7 +32,9 @@ export async function retrieveAndGenerate(
         modelArn: process.env.BEDROCK_MODEL_ARN!,
       },
     },
-    sessionId,
+    // Bedrock only accepts a sessionId it issued itself in a prior response;
+    // omit it to start a new session instead of passing a client-generated id.
+    sessionId: sessionId || undefined,
   });
 
   const response = await client.send(command);
@@ -39,6 +42,7 @@ export async function retrieveAndGenerate(
   return {
     answer: response.output?.text ?? "",
     citations: mapCitations(response),
+    sessionId: response.sessionId,
   };
 }
 
